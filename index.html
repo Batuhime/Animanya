@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animanya | İzleme Merkezi</title>
+    <title>Animanya | Hell's Paradise 2</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,43 +14,85 @@
         <ul class="nav-links">
             <li><a href="#" class="active">Ana Sayfa</a></li>
             <li><a href="#">Seriler</a></li>
-            <li><a href="#">Topluluk</a></li>
         </ul>
     </nav>
 
     <main class="container">
         <section class="player-section">
             <div class="video-wrapper">
-				<iframe src="https://drive.google.com/file/d/1KTaTLiv7Hp6AL4G-HJbNSb3swYnAnvgo/preview" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-			</div>
+                <iframe id="main-player" src="" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            </div>
             
             <div class="video-info">
-                <h1>Bölüm 1: Maceranın Başlangıcı</h1>
-                <p>Animanya dünyasına hoş geldin. Arkanı yasla ve izlemeye başla.</p>
+                <h1 id="episode-title">Yükleniyor...</h1>
+                <p id="episode-desc">Bölüm seçimi yapıldığında açıklama burada görünecek.</p>
                 <div class="tags">
-                    <span class="tag">#Aksiyon</span>
-                    <span class="tag">#Macera</span>
+                    <span class="tag">#HellsParadise</span>
+                    <span class="tag">#Sezon2</span>
+                    <span class="tag" id="current-ep-tag">Bölüm: -</span>
                 </div>
             </div>
         </section>
 
         <aside class="sidebar">
-            <h3>Sıradaki Bölümler</h3>
-            <div class="video-card">
-                <div class="thumbnail"></div>
-                <div class="card-info">
-                    <h4>Bölüm 2: Gizli Geçit</h4>
-                    <p>Yakında...</p>
+            <h3>Bölüm Seçimi (12 Bölüm)</h3>
+            <div class="episode-list" id="episode-list-container">
                 </div>
-            </div>
-            <div class="video-card">
-                <div class="thumbnail"></div>
-                <div class="card-info">
-                    <h4>Bölüm 3: Uyanış</h4>
-                    <p>Yakında...</p>
-                </div>
-            </div>
         </aside>
     </main>
+
+    <script>
+        // --- BURAYI GÜNCELLEMEN YETERLİ ---
+        const animeData = {
+            seriesName: "Hell's Paradise: Jigokuraku Sezon 2",
+            episodes: [
+                { id: "1KTaTLiv7Hp6AL4G-HJbNSb3swYnAnvgo", title: "Bölüm 1: Cennetin Kıyısında", desc: "Ada macerası kaldığı yerden devam ediyor. İlk karşılaşmalar her zaman zordur." },
+                { id: "DRIVE_ID_BURAYA_GELECEK", title: "Bölüm 2: Gölgelerin Dansı", desc: "Gabimaru yeteneklerini bir kez daha sergiliyor." },
+                { id: "DRIVE_ID_BURAYA_GELECEK", title: "Bölüm 3: Tao'nun Gizemi", desc: "Gücün gerçek kaynağı yavaş yavaş ortaya çıkıyor." },
+                // Buraya 12. bölüme kadar aynı formatta ekleme yapabilirsin
+            ]
+        };
+
+        const player = document.getElementById('main-player');
+        const titleDisplay = document.getElementById('episode-title');
+        const descDisplay = document.getElementById('episode-desc');
+        const epTag = document.getElementById('current-ep-tag');
+        const listContainer = document.getElementById('episode-list-container');
+
+        // Bölümleri Listeleme Fonksiyonu
+        function initApp() {
+            animeData.episodes.forEach((ep, index) => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <div class="thumbnail">${index + 1}</div>
+                    <div class="card-info">
+                        <h4>${ep.title}</h4>
+                        <p>İzlemek için tıkla</p>
+                    </div>
+                `;
+                card.onclick = () => loadEpisode(index);
+                listContainer.appendChild(card);
+            });
+            // İlk bölümü otomatik yükle
+            loadEpisode(0);
+        }
+
+        // Bölüm Değiştirme Fonksiyonu
+        function loadEpisode(index) {
+            const ep = animeData.episodes[index];
+            player.src = `https://drive.google.com/file/d/${ep.id}/preview`;
+            titleDisplay.innerText = ep.title;
+            descDisplay.innerText = ep.desc;
+            epTag.innerText = `Bölüm: ${index + 1}`;
+            
+            // Aktif kartı işaretleme
+            document.querySelectorAll('.video-card').forEach((c, i) => {
+                c.classList.toggle('active-card', i === index);
+            });
+        }
+
+        initApp();
+    </script>
 </body>
 </html>
